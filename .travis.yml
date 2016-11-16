@@ -1,0 +1,20 @@
+sudo: required
+
+services:
+  - docker
+env:
+  - IMAGE_NAME=msvrtan/code
+script:
+  - if [ $TRAVIS_TAG ]; then
+    docker build -t $IMAGE_NAME:$TRAVIS_TAG  .;
+    fi
+  - if [ -z $TRAVIS_TAG ]; then
+    docker build .;
+    fi
+
+after_success:
+  - if [ "$TRAVIS_TAG" ]; then
+    docker login -u="$REGISTRY_USER" -p="$REGISTRY_PASS"
+    docker push $IMAGE_NAME:$TRAVIS_TAG;
+    docker logout
+    fi
