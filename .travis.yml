@@ -13,8 +13,8 @@ script:
     fi
 
 after_success:
-  - if [ "$TRAVIS_TAG" ]; then
-    docker login -u="$REGISTRY_USER" -p="$REGISTRY_PASS"
-    docker push $IMAGE_NAME:$TRAVIS_TAG;
-    docker logout
-    fi
+  - docker login -u="$REGISTRY_USER" -p="$REGISTRY_PASS"
+  - if [ "$TRAVIS_TAG" ]; then docker push $IMAGE_NAME:$TRAVIS_TAG; fi
+  - docker logout
+
+  
