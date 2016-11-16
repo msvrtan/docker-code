@@ -5,16 +5,13 @@ services:
 env:
   - IMAGE_NAME=msvrtan/code
 script:
-  - if [ $TRAVIS_TAG ]; then
-    docker build -t $IMAGE_NAME:$TRAVIS_TAG  .;
-    fi
-  - if [ -z $TRAVIS_TAG ]; then
-    docker build .;
-    fi
+  - docker build -t $IMAGE_NAME:latest .
+  - if [ $TRAVIS_TAG ]; then docker build -t $IMAGE_NAME:$TRAVIS_TAG . ; fi
 
 after_success:
   - docker login -u="$REGISTRY_USER" -p="$REGISTRY_PASS"
   - if [ "$TRAVIS_TAG" ]; then docker push $IMAGE_NAME:$TRAVIS_TAG; fi
+  - if [[ $TRAVIS_BRANCH = master ]]; then docker push $IMAGE_NAME:latest; fi
   - docker logout
 
   
